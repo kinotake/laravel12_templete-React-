@@ -7,9 +7,17 @@ import LeftCurveImage from '../../../images/home/left_curve.png';
 import VectorImage from '../../../images/home/vector.png';
 import EstraLogoImage from '../../../images/logo_icon/estra_logo.png';
 import UserButton from '../../common/user_button/summarize';
-
+import { usePage } from "@inertiajs/react";
+import type { DepartmentsTable } from "../../../types/database";
 
 const RightSummarize = () => {
+
+    type StaticTypingDepartments = {
+    departments: Array<DepartmentsTable>;
+    };
+
+    const { props } = usePage<StaticTypingDepartments>();
+
     return (
         <div class="border-l-1">
             <div className="flex relative">
@@ -19,25 +27,25 @@ const RightSummarize = () => {
                         <PeopleText
                         imageSrc={BelongPeopleImage}
                         altText="所属の画像"
-                        description="career counselor_" />
+                        description={props.departments[0].name} />
                     </div>
                     <div className="mt-7 ml-0">
                         <PeopleText
                         imageSrc={BelongPeopleImage}
                         altText="所属の画像"
-                        description="sales_" />
+                        description={props.departments[1].name} />
                     </div>
                     <div className="mt-60">
                         <PeopleText
                         imageSrc={BelongPeopleImage}
                         altText="所属の画像"
-                        description="development_(PT)" />
+                        description={props.departments[2].name} />
                     </div>
                     <div className="mt-20">
                         <NoPeopleText
                         imageSrc={NoBelongPeopleImage}
                         altText="所属の画像"
-                        description="manager_" />
+                        description={props.departments[3].name} />
                     </div>
                 </div>
             </div>
@@ -46,13 +54,13 @@ const RightSummarize = () => {
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="development_(CT)" />
+                    description={props.departments[4].name} />
                 </div>
                 <div className="ml-30">
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="coach_" />
+                    description={props.departments[5].name} />
                 </div>
             </div>
             <div className="flex">
@@ -60,25 +68,25 @@ const RightSummarize = () => {
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="counselor_" />
+                    description={props.departments[6].name} />
                 </div>
                 <div className="ml-10">
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="CS_" />
+                    description={props.departments[7].name} />
                 </div>
                 <div className="mt-30">
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="marketing_" />
+                    description={props.departments[8].name} />
                 </div>
                 <div className="ml-10">
                     <PeopleText
                     imageSrc={BelongPeopleImage}
                     altText="所属の画像"
-                    description="QA_" />
+                    description={props.departments[9].name} />
                 </div>
                 <UserButton/>
                 <div className="fixed right-0 top-[70vh]">

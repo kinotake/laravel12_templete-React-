@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -45,5 +47,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'department_user')->withTimestamps();
+    }
+
+    public function notices(): BelongsToMany
+    {
+        return $this->belongsToMany(Notice::class, 'notice_user')->withTimestamps();
+    }
+
+    public function todos(): HasMany
+    {
+        return $this->hasMany(Todo::class);
+    }
+
+    public function tweets(): HasMany
+    {
+        return $this->hasMany(Tweet::class);
     }
 }

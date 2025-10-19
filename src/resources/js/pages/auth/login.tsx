@@ -52,7 +52,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                     <Label htmlFor="password">Password</Label>
                                     {canResetPassword && (
                                         <TextLink
-                                            href={request()}
+                                            href={password.request()}
                                             className="ml-auto text-sm"
                                             tabIndex={5}
                                         >
