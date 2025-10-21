@@ -20,7 +20,7 @@ const NoBelongPeopleText: React.FC<ImageWithTextProps> = ({ imageSrc, altText, d
 
     return (
     <div className="inline-block text-center">
-        <img src={imageSrc} alt={altText} className="w-27 h-30"/>
+        <img src="/images/home/no_belong_people.png" alt={altText} className="w-27 h-30"/>
         <p className="text-[#0D99FF] text-xl">{beforeUnderscore}</p>
         {hasUnderscore && <p>{afterUnderscore}</p>}
     </div>

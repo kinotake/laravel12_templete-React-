@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('department_id')->constrained('departments');
+            $table->text('title')->nullable();
             $table->text('content');
             $table->timestamps();
         });

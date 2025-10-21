@@ -7,6 +7,7 @@ export type UsersTable = {
     id: number;
     name: string;
     email: string;
+    img: Nullable<string>;
     email_verified_at: Nullable<Timestamp>;
     password: string;
     remember_token: Nullable<string>;
