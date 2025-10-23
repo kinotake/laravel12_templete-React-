@@ -24,9 +24,6 @@ class DepartmentController extends Controller
         $department = Department::findOrFail($department_id);
 
         $members = $department->users()
-            ->select('users.id', 'users.name', 'users.img')
-            ->with(['tweet:id,user_id,content,created_at'])
-            ->orderBy('users.name')
             ->get()
             ->map(static function (User $user) {
                 return [

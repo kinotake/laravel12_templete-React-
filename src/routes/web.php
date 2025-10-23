@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [UserController::class, 'index'])->name('home');
 Route::get('/departments/{department_id}', [DepartmentController::class, 'index']);
 Route::get('/user/todo', [TodoController::class, 'index']);
+Route::inertia('/schedule', 'schedule');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

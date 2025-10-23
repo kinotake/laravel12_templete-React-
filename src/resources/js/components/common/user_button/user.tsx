@@ -13,7 +13,7 @@ const HoveredUserButton = () => {
 
     return (
         <div className="relative">
-            <a href="/hoge">
+            <a href="/user/todo">
                 <img
                     src="/images/home/user.png"
                     alt="ユーザー画像"

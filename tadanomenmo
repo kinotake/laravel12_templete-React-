@@ -1,0 +1,43 @@
+useEffect(() => {
+        const handleScroll = () => {
+            // const scrollY = window.scrollY;
+            // console.log(`スクロール位置: ${scrollY}px`);
+
+            let windowHeight = window.outerHeight;
+            let outerHeight = window.scrollY;
+
+            let isCooldown = false;
+
+            let currentScroll = windowHeight - outerHeight;
+            console.log(`現在の画面の高さ: ${windowHeight}px`);
+            console.log(`現在のスクロール位置の高さ: ${outerHeight}px`);
+            console.log(`現在のスクロール位置の差分: ${currentScroll}px`);
+
+            setTimeout(() => {
+                isCooldown = false;
+                console.log("再び実行可能になりました");
+            }, 2000);
+
+            if (outerHeight > 100) {
+                console.log("1px以上スクロールされました");
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+
+                isCooldown = true;
+
+                setTimeout(() => {
+                    isCooldown = false;
+                    console.log("再び実行可能になりました");
+                }, 2000);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        // クリーンアップ（アンマウント時）
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);

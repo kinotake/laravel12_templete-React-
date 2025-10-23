@@ -8,11 +8,12 @@ const DepartmentPage = () => {
     return (
         <div>
             <h1 className="text-center">{department?.department_name}</h1>
-            <ul className="h-150 overflow-y-scroll">
+            <div className="">
                 {members.map((member: any) => (
-                    <div className="flex mt-8">
-                        <div>
-                            <div className="w-17 h-17 rounded-full ml-4">
+                    <div className="flex mt-[50px]">
+                        <div className="relative w-[100px]">
+                            <div className="w-[80px] h-[80px] rounded-full ml-4 absolute bg-blue-300"></div>
+                            <div className="w-[69px] h-[68px] rounded-full ml-[22px] absolute mt-[2px]">
                                 <img className="rounded-full" src={'/storage/hito.jpg'} alt="" />
                             </div>
                         </div>
@@ -27,7 +28,7 @@ const DepartmentPage = () => {
                         </div>
                     </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
     };
