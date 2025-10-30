@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             NoticeUserSeeder::class,
             TodoSeeder::class,
             TweetSeeder::class,
+            ScheduleSeeder::class,
+            SurveySeeder::class,
         ]);
     }
 }

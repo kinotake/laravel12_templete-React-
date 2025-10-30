@@ -4,12 +4,12 @@ import MyComponent from './my_component';
 
 const Notice = () => {
     const { props } = usePage();
-    const department = props.department;
-    const notices = department?.notices || [];
+    const display_data = props.display_data;
+    const notices = display_data?.notices || [];
 
     return (
         <div className="ml-10">
-            <h2 className="mt-4">{department?.department_name}お知らせ一覧</h2>
+            <h2 className="mt-4">{display_data?.department_name}お知らせ一覧</h2>
             <div className="border-y">
                 <div className="w-[75vw] mt-[10px] overflow-x-scroll flex">
                 {notices.length === 0 ? (

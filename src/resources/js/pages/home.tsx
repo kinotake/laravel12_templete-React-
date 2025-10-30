@@ -5,7 +5,7 @@ import LeftSummarize from '../components/home/left_contents/summarize';
 const Home: React.FC = () => {
     return (
         <div className="flex">
-            <div className="w-1/2">
+            <div className="w-1/2 bg-[#F9F9F9]">
                 <LeftSummarize />
             </div>
             <div className="w-1/2">

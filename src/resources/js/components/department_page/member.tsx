@@ -2,15 +2,14 @@ import { usePage } from "@inertiajs/react";
 
 const DepartmentPage = () => {
     const { props } = usePage();
-    const department = props.department;
-    const members = department?.members || [];
+    const display_data = props.display_data;
+    const members = display_data?.members || [];
 
     return (
         <div>
-            <h1 className="text-center">{department?.department_name}</h1>
-            <div className="">
+            <h1 className="text-center">{display_data?.department_name}</h1>            <div className="">
                 {members.map((member: any) => (
-                    <div className="flex mt-[50px]">
+                    <div className="flex h-[100px]">
                         <div className="relative w-[100px]">
                             <div className="w-[80px] h-[80px] rounded-full ml-4 absolute bg-blue-300"></div>
                             <div className="w-[69px] h-[68px] rounded-full ml-[22px] absolute mt-[2px]">

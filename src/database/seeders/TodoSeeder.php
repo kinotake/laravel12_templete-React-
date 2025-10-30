@@ -3,44 +3,32 @@
 namespace Database\Seeders;
 
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TodoSeeder extends Seeder
 {
     public function run(): void
     {
-        $todoTemplates = [
-            'admin@example.com' => [
-                'Review infrastructure capacity plan.',
-                'Approve Q2 security audit report.',
-            ],
-            'test@example.com' => [
-                'Verify onboarding checklist for new hires.',
-            ],
-            'manager@example.com' => [
-                'Compile weekly status summary for stakeholders.',
-            ],
-            'hr@example.com' => [
-                'Prepare orientation materials for next cohort.',
-            ],
-            'ops@example.com' => [
-                'Schedule incident postmortem discussion.',
-            ],
-        ];
+        $userId = 1;
+        $departments = [1, 2, 3];
 
-        foreach ($todoTemplates as $email => $todos) {
-            $user = User::where('email', $email)->first();
+        foreach ($departments as $departmentId) {
+            for ($i = 1; $i <= 10; $i++) {
+                $title = sprintf('部署%dのタスク%02d', $departmentId, $i);
+                $content = sprintf('部署%d向けに自動作成したTODO%02dです。', $departmentId, $i);
+                $slackUrl = sprintf('https://slack.example.com/department/%d/task/%02d', $departmentId, $i);
 
-            if (! $user) {
-                continue;
-            }
-
-            foreach ($todos as $content) {
-                Todo::firstOrCreate([
-                    'user_id' => $user->id,
-                    'content' => $content,
-                ]);
+                Todo::updateOrCreate(
+                    [
+                        'user_id' => $userId,
+                        'department_id' => $departmentId,
+                        'title' => $title,
+                    ],
+                    [
+                        'content' => $content,
+                        'slack_url' => $slackUrl,
+                    ],
+                );
             }
         }
     }

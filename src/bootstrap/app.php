@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'aaa',
+            'slack/interact',
+            'api/*',       // API系をまとめて除外したい場合
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

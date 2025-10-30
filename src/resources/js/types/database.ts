@@ -8,6 +8,7 @@ export type UsersTable = {
     name: string;
     email: string;
     img: Nullable<string>;
+    energy: number;
     email_verified_at: Nullable<Timestamp>;
     password: string;
     remember_token: Nullable<string>;
@@ -28,6 +29,7 @@ export type DepartmentsTable = {
 export type NoticesTable = {
     id: number;
     department_id: number;
+    title: string;
     content: string;
     created_at: Timestamp;
     updated_at: Timestamp;
@@ -36,7 +38,21 @@ export type NoticesTable = {
 export type TodosTable = {
     id: number;
     user_id: number;
+    department_id: Nullable<number>;
+    title: Nullable<string>;
+    slack_url: Nullable<string>;
     content: string;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+};
+
+export type SchedulesTable = {
+    id: number;
+    detail: string;
+    start: Timestamp;
+    end: Timestamp;
+    department_id: number;
+    user_id: number;
     created_at: Timestamp;
     updated_at: Timestamp;
 };

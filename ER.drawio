@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="diagram1" name="ERD">
-        <mxGraphModel dx="728" dy="2066" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1953" dy="1451" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -122,7 +122,7 @@
                     <mxGeometry y="134" width="220" height="26" as="geometry"/>
                 </mxCell>
                 <mxCell id="department_user" value="Department_User" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;rounded=0;shadow=0;" parent="1" vertex="1">
-                    <mxGeometry x="40" y="-120" width="240" height="186" as="geometry"/>
+                    <mxGeometry x="-150" y="-120" width="240" height="186" as="geometry"/>
                 </mxCell>
                 <mxCell id="department_user_id" value="id (PK, bigint)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" parent="department_user" vertex="1">
                     <mxGeometry y="30" width="240" height="26" as="geometry"/>
@@ -312,7 +312,7 @@
                 <mxCell id="department_user_to_users" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" parent="1" source="department_user" target="users_updated_at" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="160" y="-190"/>
+                            <mxPoint x="-80" y="-190"/>
                             <mxPoint x="290" y="-190"/>
                         </Array>
                     </mxGeometry>
@@ -335,6 +335,90 @@
                 <mxCell id="14" style="edgeStyle=none;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="departments_updated_at">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="680" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="17" value="Schedules" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;rounded=0;shadow=0;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="160" width="220" height="238" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="id (PK, bigint)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="30" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="detail (string[255])" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="56" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="start (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="82" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="end (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="108" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="department_id (FK→departments.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="134" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="user_id (FK→users.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="160" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="created_at (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="186" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="updated_at (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="17">
+                    <mxGeometry y="212" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" edge="1" parent="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="440" y="160" as="sourcePoint"/>
+                        <mxPoint x="810" y="-150" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="810" y="1"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="17">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="349.64" y="-116" as="sourcePoint"/>
+                        <mxPoint x="349.64" y="-233" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="31" value="Serveys" style="shape=swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;rounded=0;shadow=0;" vertex="1" parent="1">
+                    <mxGeometry x="-10" y="160" width="220" height="186" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="id (PK, bigint)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="30" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="detail (string[255])" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="56" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="department_id (FK→departments.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="82" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="user_id (FK→users.id)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="108" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="created_at (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="134" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="updated_at (timestamp)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=8;fontSize=12;" vertex="1" parent="31">
+                    <mxGeometry y="160" width="220" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="31">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="120" y="160"/>
+                            <mxPoint x="120" y="-120"/>
+                            <mxPoint x="320" y="-120"/>
+                        </Array>
+                        <mxPoint x="-50" y="-117" as="sourcePoint"/>
+                        <mxPoint x="320" y="-230" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="31">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="290" y="154" as="sourcePoint"/>
+                        <mxPoint x="660" y="-156" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="155" y="50"/>
+                            <mxPoint x="660" y="50"/>
+                        </Array>
                     </mxGeometry>
                 </mxCell>
             </root>

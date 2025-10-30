@@ -15,6 +15,9 @@ class Todo extends Model
      */
     protected $fillable = [
         'user_id',
+        'department_id',
+        'title',
+        'slack_url',
         'content',
     ];
 

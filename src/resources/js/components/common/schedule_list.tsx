@@ -1,26 +1,69 @@
-const ScheduleList = () => {
+const ScheduleList = ({ schedules }) => {
+
     return (
-        <div className="border-l-4 border-gray-300 ml-[10px] h-[390px] relative mt-[15px]">
-            {/* mtの値は月の初めから換算して、 一日13px*/}
-            {/* 期間の長さによって重なりの値を変える z-(31-日付の日数) */}
-            <div className="flex absolute hover:bg-[#ffffff] z-10 group mt-[26px]">
-                {/* h-[90px]のみ日付の長さによって可変にする 一日13px*/}
-                <img className="w-[30px] h-[45px] group-hover:z-100" src="/images/home/schedule/blue_fox.png" alt="" />
-                {/* 孤の高さhの値をxとおくと、 mt-[（x-20）/2] */}
-                <div className="group-hover:z-100">
-                    <p className="text-sm text-gray-500 mt-[8px] w-[200px]">ここに内容が入る</p>
-                    <p className="text-sm text-gray-500 hidden group-hover:block">(10/3-10/6)</p>
-                </div>
-            </div>
-            <div className="flex absolute hover:bg-[#ffffff] z-10 group">
-                {/* h-[90px]のみ日付の長さによって可変にする 一日13px*/}
-                <img className="w-[30px] h-[45px] group-hover:z-100" src="/images/home/schedule/blue_fox.png" alt="" />
-                {/* 孤の高さhの値をxとおくと、 mt-[（x-20）/2] */}
-                <div className="group-hover:z-100">
-                    <p className="text-sm text-gray-500 mt-[8px] w-[200px]">社内の情報の構造化をしたい</p>
-                    <p className="text-sm text-gray-500 hidden group-hover:block">(10/3-10/6)</p>
-                </div>
-            </div>
+        <div className="border-l-4 border-gray-300 ml-[10px] h-[413px]">
+                        {schedules?.map((schedule, j) => {
+                            const startDay = schedule.start.split("T")[0];
+                            const endDay = schedule.end.split("T")[0];
+
+                            const now = new Date();
+                            const todayMonth = now.getMonth() + 1;
+
+                            const startDayMonth = startDay.split("-")[1];
+                            const endDayMonth = endDay.split("-")[1];
+
+                            let replacedStartDay;
+                            if (todayMonth != startDayMonth) {
+                                replacedStartDay = 1;
+                            } else {
+                                replacedStartDay = startDay.split("-")[2];
+                            }
+
+                            let replacedEndDay;
+                            if (todayMonth != endDayMonth) {
+                                replacedEndDay = 31;
+                            } else {
+                                replacedEndDay = endDay.split("-")[2];
+                            }
+
+                            const longDay = replacedEndDay - replacedStartDay;
+                            const day_height = 13;
+                            const fox_mt = (replacedStartDay - 1) * day_height;
+                            const fox_height = (replacedEndDay - replacedStartDay) * day_height;
+                            const fox_z = (31 - longDay) * 3;
+                            const text_mt = (fox_height - 20) / 2;
+
+                            return (
+                                <div key={j}>
+                                    <div
+                                        className="flex absolute hover:bg-[#ffffff] group"
+                                        style={{
+                                            marginTop: `${fox_mt}px`,
+                                            zIndex: fox_z,
+                                        }}
+                                    >
+                                        <img
+                                            className="w-[30px] group-hover:z-100"
+                                            src="/images/home/schedule/blue_fox.png"
+                                            alt=""
+                                            style={{
+                                                height: `${fox_height}px`,
+                                            }}
+                                        />
+                                        <div className=" flex flex-col gap-2 group-hover:z-[100] group-hover:bg-[#ffffff]" style={{ marginTop: `${text_mt}px` }}>
+                                            <p
+                                                className="text-sm text-gray-500 w-[200px]"
+                                            >
+                                                {schedule.detail}
+                                            </p>
+                                            <p className="text-sm text-gray-500 hidden group-hover:block">
+                                                ({startDay})-({endDay})
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
         </div>
     );
 };

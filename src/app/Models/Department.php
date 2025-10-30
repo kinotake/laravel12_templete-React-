@@ -27,4 +27,9 @@ class Department extends Model
     {
         return $this->belongsToMany(User::class, 'department_user')->withTimestamps();
     }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
 }

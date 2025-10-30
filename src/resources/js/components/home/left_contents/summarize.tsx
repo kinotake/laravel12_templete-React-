@@ -1,8 +1,10 @@
 import React from 'react'
+import TextBox from './text_box';
+
 const LeftSummarize = () => {
     return (
-        <div>
-            <p>仮のコンテンツです</p>
+        <div className="bg-[#F9F9F9] min-h-screen">
+            <TextBox/>
         </div>
     );
 };

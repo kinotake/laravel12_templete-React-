@@ -41,3 +41,217 @@ useEffect(() => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+<div className="flex absolute hover:bg-[#ffffff] z-10 group">
+                            {/* h-[90px]のみ日付の長さによって可変にする 一日13px*/}
+                            <img className="w-[30px] h-[45px] group-hover:z-100" src="/images/home/schedule/blue_fox.png" alt="" />
+                            {/* 孤の高さhの値をxとおくと、 mt-[（x-20）/2] */}
+                            <div className="group-hover:z-100">
+                                <p className="text-sm text-gray-500 mt-[8px] w-[200px]">社内の情報の構造化をしたい</p>
+                                <p className="text-sm text-gray-500 hidden group-hover:block">(10/3-10/6)</p>
+                            </div>
+                        </div>
+
+
+
+import { usePage } from "@inertiajs/react";
+
+const ScheduleList = () => {
+    const { props } = usePage();
+    const display_data = props.display_data?.members_items || [];
+    console.log(display_data);
+
+    return (
+        {display_data.map((display_item, i) => (
+            <div key={i}>
+        <div className="border-l-4 border-gray-300 ml-[10px] h-[413px] relative">
+
+                    {display_item.schedules?.map((schedule, j) => {
+
+                        const startDay = schedule.start.split("T")[0];
+                        const endDay = schedule.end.split("T")[0];
+
+                        // 以下、描画処理(startとendの日程が今月でなかった場合、startは月の初日、endは締日として換算)
+
+                        const now = new Date();
+                        const todayMonth = now.getMonth() + 1;
+
+                        const startDayMonth = startDay.split("-")[1];
+                        const endDayMonth = endDay.split("-")[1];
+
+                        let replacedStartDay;
+                        if (todayMonth != startDayMonth) {
+                            replacedStartDay = startDay.split("-")[2];
+                            replacedStartDay = 1;
+
+                        } else {
+
+                            replacedStartDay = startDay.split("-")[2];
+
+                        }
+
+                        let replacedEndDay;
+
+                        if (todayMonth != endDayMonth) {
+                            replacedEndDay = endDay.split("-")[2];
+                            replacedEndDay = 31;
+
+                        } else {
+
+                            replacedEndDay = endDay.split("-")[2];
+
+                        }
+
+                        const longDay = replacedEndDay - replacedStartDay;
+                        const day_height = 13;
+                        const fox_mt = (replacedStartDay - 1) * day_height;
+                        const fox_height = (replacedEndDay - replacedStartDay) * day_height;
+                        const fox_z = (31 - longDay)*3;
+                        const text_mt = fox_mt - ((fox_height - 20) / 2);
+                        const opacity = 10+(30*j/2);
+
+                        console.log(opacity);
+
+                        return (
+                            <div key={j}>
+                                {/* mtの値は月の初めから換算して、一日13px */}
+                                {/* 期間の長さによって重なりの値を変える z-(31-日付の日数) */}
+                                <div
+                                    className="flex absolute hover:bg-[#ffffff] group" style={{marginTop: `${fox_mt}px`,zIndex: `${fox_z}px`}}>
+                                    {/* h-[90px]のみ日付の長さによって可変にする 一日13px */}
+                                    <img
+                                        className="w-[30px] group-hover:z-100"
+                                        src="/images/home/schedule/blue_fox.png"
+                                        alt=""
+                                        style={{
+                                            height: `${fox_height}px`,
+                                            opacity: `${opacity}`,
+                                        }}
+                                    />
+                                    {/* 孤の高さhの値をxとおくと、 mt-[（x-20）/2] */}
+                                    <div className="group-hover:z-100">
+                                        <p className="text-sm text-gray-500 w-[200px]" style={{ marginTop: `${text_mt}px` }}>
+                                            {schedule.detail}
+                                        </p>
+                                        <p className="text-sm text-gray-500 hidden group-hover:block">
+                                            ({startDay})-({endDay})
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+            </div>
+            </div>
+        ))}
+    );
+}
+
+export default ScheduleList;
+
+まいページで描画された。
+const ScheduleList = ({ departments, displaySchedules, selectedDepartmentId }) => {
+
+    let schedule = null;
+
+    if (selectedDepartmentId === null) {
+
+        const department_id = departments[0].id;
+        schedule = displaySchedules.find(displaySchedule => displaySchedule.department_id === department_id);
+        console.log("要素です");
+        console.log(schedule);
+    }
+    else {
+        schedule = displaySchedules.find(displaySchedule => displaySchedule.department_id === selectedDepartmentId);
+        console.log(schedule);
+    }
+
+    return (
+        <div className="border-l-4 border-gray-300 ml-[10px] h-[413px]">
+                        {[schedule].filter(Boolean).map((schedule, j) => {
+
+
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use App\Models\Department;
+use Illuminate\Support\Facades\Log;
+
+class SlackController extends Controller
+{
+    public function interact(Request $request)
+    {
+        $departments = Department::all();
+
+        $payload = json_decode($request->input('payload'), true);
+
+        if (isset($payload['type']) && $payload['type'] == 'message_action') {
+
+            $trigger_id = $payload['trigger_id'];
+
+            $options = [];
+            foreach ($departments as $department) {
+                $options[] = [
+                    'text' => [
+                        'type' => 'plain_text','text' => $department->name,
+                    ],
+                    'value' => (string)$department->id,
+                ];
+            }
+
+            $view = [
+                'type' => 'modal',
+                'callback_id' => 'select_example',
+                'private_metadata' => json_encode([
+                    'original_message' => $payload['message'] ?? null,
+                    'user_id' => $payload['user']['id'] ?? null,
+                    'department_name' => $payload['text'] ?? null,
+                ]),
+                'title' => ['type' => 'plain_text', 'text' => '選択してください'],
+                'blocks' => [
+                    [
+                        'type' => 'input',
+                        'block_id' => 'select_block',
+                        'label' => ['type' => 'plain_text', 'text' => 'オプションを選択'],
+                        'element' => [
+                            'type' => 'static_select',
+                            'action_id' => 'option_select',
+                            'placeholder' => ['type' => 'plain_text', 'text' => '選んでください'],
+                            'options' => $options,
+                        ]
+                    ]
+                ],
+                'submit' => ['type' => 'plain_text', 'text' => '送信'],
+
+            ];
+
+            $response = Http::withToken(env('SLACK_BOT_TOKEN'))
+                ->post('https://slack.com/api/views.open', [
+                    'trigger_id' => $trigger_id,
+                    'view' => json_encode($view),
+                ]);
+
+            return response()->json(['ok' => true]);
+        }
+
+        if (isset($payload['type']) && $payload['type'] == 'view_submission') {
+            $selected = $payload['view']['state']['values']['select_block']['option_select']['selected_option']['value'] ?? null;
+            $meta = json_decode($payload['view']['private_metadata'] ?? '{}', true);
+
+            Log::info('どんな値が入っていますか:', $selected);
+
+            Http::withToken(env('SLACK_BOT_TOKEN'))->post('https://slack.com/api/chat.postMessage', [
+                'channel' => $payload['user']['id'], // DM でユーザー本人に送る
+                'text' => "内容: {$meta['original_message']['text']} です ✅",
+            ]);
+
+            return response()->json(['response_action' => 'clear']);
+        }
+
+        return response()->json(['ok' => true]);
+    }
+}
+

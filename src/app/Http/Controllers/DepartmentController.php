@@ -17,11 +17,19 @@ class DepartmentController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
 
+        $department = Department::findOrFail($department_id);
+
+        $department_user_todos = [];
+
         $todos = Todo::where('user_id', $user_id)
-            ->where('department_id', $department_id)
+            ->where('department_id', $department->id)
             ->get();
 
-        $department = Department::findOrFail($department_id);
+        $department_user_todos[] = [
+            'department_id' => $department->id,
+            'department_name' => $department->name,
+            'todos' => $todos,
+        ];
 
         $members = $department->users()
             ->get()
@@ -54,13 +62,13 @@ class DepartmentController extends Controller
             ->values();
 
         return Inertia::render('department_page', [
-            'department' => [
+            'display_data' => [
                 'department_id' => $department->id,
                 'department_name' => $department->name,
                 'members' => $members,
                 'notices' => $notices,
-                'todos' => $todos,
                 'user' => $user,
+                'display_todos' => $department_user_todos,
             ],
         ]);
     }
