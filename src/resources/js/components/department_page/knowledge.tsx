@@ -1,4 +1,4 @@
-const Knowledge = () => {
+const Knowledge = ({department_id}) => {
 
     let lms = {
         url: "https://lms.coachtech.site/renewal/user/login/",
@@ -10,7 +10,7 @@ const Knowledge = () => {
         image: "/images/logo_icon/notion.png",
     };
     let document = {
-        url: "",
+        url: `/document/edit/${department_id}`,
         image: "/images/logo_icon/document.png",
     };
 

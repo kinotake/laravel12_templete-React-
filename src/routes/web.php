@@ -6,6 +6,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SlackController;
+use App\Http\Controllers\PythonController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -42,3 +43,8 @@ Route::post('/aaa', function (Request $request) {
 });
 
 Route::post('/slack/interact', [SlackController::class, 'interact']);
+
+Route::post('/api/rag/query', [PythonController::class, 'index']);
+Route::post('/rag/edit/{department_id}', [PythonController::class, 'edit']);
+
+Route::get('/document/edit/{department_id}', [UserController::class, 'show']);

@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Notice::class, 'notice_user')->withTimestamps();
     }
 
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
+    }
+
     public function todos(): HasMany
     {
         return $this->hasMany(Todo::class);

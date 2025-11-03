@@ -1,7 +1,7 @@
 import Member from './member';
 import Knowledge from './knowledge';
 
-const Sidebar = () => {
+const Sidebar = ({department_id}) => {
 
     return (
         <div className="w-80 h-[105vh] bg-[#D9D9D9]">
@@ -14,7 +14,7 @@ const Sidebar = () => {
                 <div className="h-150 overflow-y-scroll">
                     <Member />
                 </div>
-                <Knowledge />
+                <Knowledge department_id={department_id}/>
             </div>
         </div>
     );

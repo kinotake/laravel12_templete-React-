@@ -46,6 +46,17 @@ export type TodosTable = {
     updated_at: Timestamp;
 };
 
+export type ChatsTable = {
+    id: number;
+    user_id: number;
+    query: string;
+    similar_context: Nullable<string>;
+    answer: Nullable<string>;
+    similarity_score: number;
+    created_at: Timestamp;
+    updated_at: Timestamp;
+};
+
 export type SchedulesTable = {
     id: number;
     detail: string;
