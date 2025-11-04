@@ -41,7 +41,7 @@ const DocumentEdit: React.FC = () => {
     return (
         <div className="flex">
             <div className="w-1/2 bg-[#F9F9F9]">
-                <ChatSummarize chats={chats} route={route} />
+                <ChatSummarize chats={chats} route={route} department_id={department_id} />
             </div>
             <div className="w-1/2 h-[90vh] overflow-y-auto border-4 border-gray-300 ml-[20px] mt-[20px] w-[700px] rounded-sm">
                 <textarea className="h-[90vh] w-[680px] ml-[10px] mt-[10px]" value={text}

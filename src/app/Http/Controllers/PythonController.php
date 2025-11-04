@@ -55,6 +55,24 @@ class PythonController extends Controller
 
         $data = $response->json();
 
+        return redirect()->back();
+    }
+
+    public function indexDepartment(Request $request)
+    {
+        $department_id = $request->input('department_id');
+        $query = $request->input('query');
+
+        $baseUrl = env('FASTAPI_URL');
+        $endpoint = '/rag/department/query';
+
+        $response = Http::post($baseUrl . $endpoint, [
+            'query' => $query,
+            'department_id' => $department_id,
+        ]);
+
+        $data = $response->json();
+
         $reply = $data['reply'] ?? '応答がありません';
         $maxIndex = $data['max_index'] ?? null;
         $maxScore = $data['max_score'] ?? null;
@@ -69,6 +87,6 @@ class PythonController extends Controller
             'similarity_score' => $maxScore,
         ]);
 
-        return redirect('/');
+        return redirect()->back();
     }
-}
+};

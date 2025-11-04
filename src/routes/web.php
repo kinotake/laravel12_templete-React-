@@ -45,6 +45,7 @@ Route::post('/aaa', function (Request $request) {
 Route::post('/slack/interact', [SlackController::class, 'interact']);
 
 Route::post('/api/rag/query', [PythonController::class, 'index']);
+Route::post('/api/department/rag/query', [PythonController::class, 'indexDepartment']);
 Route::post('/rag/edit/{department_id}', [PythonController::class, 'edit']);
 
 Route::get('/document/edit/{department_id}', [UserController::class, 'show']);

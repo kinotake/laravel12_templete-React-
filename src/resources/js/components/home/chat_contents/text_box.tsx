@@ -1,7 +1,7 @@
 import React from 'react'
 import QueryReply from './query_reply';
 
-const TextBox = ({ chats , route  }) => {
+const TextBox = ({ chats, route, department_id }) => {
 
     return (
         <div className="bg-[#F9F9F9]">
@@ -15,7 +15,7 @@ const TextBox = ({ chats , route  }) => {
                         <img src="/images/home/on.png" className="hidden peer-checked:block" />
                     </label>
                 </div>
-                <form action={route == "all_search" ? "/api/rag/query" : "/hoge"} method="POST" className="w-[45vw] rounded bg-[#ffffff] border flex">
+                <form action={route == "all_search" ? "/api/rag/query" : "/api/department/rag/query"} method="POST" className="w-[45vw] rounded bg-[#ffffff] border flex">
                     <textarea
                         name="query"
                         placeholder="ここに入力してください"
@@ -28,6 +28,7 @@ const TextBox = ({ chats , route  }) => {
                         alt="送信"
                         />
                     </button>
+                    <input type="hidden" name="department_id" value={department_id} />
                 </form>
                 <p className="text-center mt-[0.5vh]">フィードバックを共有する</p>
             </div>
