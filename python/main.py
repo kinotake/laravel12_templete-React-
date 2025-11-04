@@ -51,24 +51,6 @@ async def receive_message(request: Request):
 
     department_id = context.split("_")[0]
 
-    # 分岐ファイルごと書き換える場合
-    # target_path = "./venv/data/department_relations.txt"
-
-    # with open(target_path, "r", encoding="utf-8") as f:
-    #     text = f.read()
-
-    # paragraphs = text.split("\n\n")
-    # vec_paragraphs = [vectorize_text(para) for para in paragraphs]
-    # embedding_path = "./venv/embeddings/department_relations.json"
-
-    # data_to_save = [
-    #     {"id": i, "text": para, "embedding": vec_para.tolist()}
-    #     for i, (para, vec_para) in enumerate(zip(paragraphs, vec_paragraphs))
-    # ]
-
-    # with open(embedding_path, "w", encoding="utf-8") as f:
-    #     json.dump(data_to_save, f, ensure_ascii=False, indent=2)
-
     json_base_dir = "./venv/embeddings/departments"
 
     target_path = None
@@ -249,3 +231,25 @@ async def receive_department_message(request: Request):
         "max_index": max_index,
         "max_score": max_score
     }
+
+@app.post("/edit/relation")
+async def relation(request: Request):
+    # 分岐ファイルごと書き換える場合
+    target_path = "./venv/data/department_relations.txt"
+
+    with open(target_path, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    paragraphs = text.split("\n\n")
+    vec_paragraphs = [vectorize_text(para) for para in paragraphs]
+    embedding_path = "./venv/embeddings/department_relations.json"
+
+    data_to_save = [
+        {"id": i, "text": para, "embedding": vec_para.tolist()}
+        for i, (para, vec_para) in enumerate(zip(paragraphs, vec_paragraphs))
+    ]
+
+    with open(embedding_path, "w", encoding="utf-8") as f:
+        json.dump(data_to_save, f, ensure_ascii=False, indent=2)
+
+    return {"message": "OK"}
