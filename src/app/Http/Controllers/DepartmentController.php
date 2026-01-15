@@ -23,6 +23,7 @@ class DepartmentController extends Controller
 
         $todos = Todo::where('user_id', $user_id)
             ->where('department_id', $department->id)
+            ->where('done', false)
             ->get();
 
         $department_user_todos[] = [
@@ -38,6 +39,7 @@ class DepartmentController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'img' => $user->img,
+                    'energy' => $user->energy,
                     'tweet' => $user->tweet ? [
                         'id' => $user->tweet->id,
                         'content' => $user->tweet->content,
@@ -48,13 +50,14 @@ class DepartmentController extends Controller
             ->values();
 
         $notices = $department->notices()
-            ->select('id', 'title', 'content', 'created_at')
+            ->select('id', 'title', 'content', 'created_at', 'slack_url')
             ->orderByDesc('created_at')
             ->get()
             ->map(static function (Notice $notice) {
                 return [
                     'id' => $notice->id,
                     'title' => $notice->title,
+                    'slack_url' => $notice->slack_url,
                     'content' => $notice->content,
                     'created_at' => $notice->created_at,
                 ];

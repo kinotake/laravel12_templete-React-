@@ -17,6 +17,7 @@ class Notice extends Model
     protected $fillable = [
         'department_id',
         'content',
+        'slack_url',
     ];
 
     public function department(): BelongsTo

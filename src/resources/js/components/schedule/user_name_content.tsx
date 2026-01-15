@@ -3,12 +3,17 @@ import ScheduleList from '../common/schedule_list';
 import Study from '../common/study';
 
 
-const UserNameContent = ({ display_data }) => {
+const UserNameContent = ({ members_items }) => {
+
+    const setTextList = (member_items) => {
+    console.log("konnnitiha");
+    return member_items?.surveys?.map((s) => s.detail) ?? [];
+};
 
     return (
         <div className="flex overflow-y-scroll w-[77vw] relative">
-            {display_data.map((display_item, i) => (
-                <div key={i}>
+            {members_items.map((member_items, i) => (
+                <div key={member_items.user_name}>
                     <div className="border-x border-gray-100 w-[280px] mt-[20px]">
                         <div className="relative w-[250px] h-[180px] ml-[55px]">
                             <img
@@ -19,11 +24,14 @@ const UserNameContent = ({ display_data }) => {
                             <div className="absolute rounded-full bg-blue-300 w-[170px] h-[170px] z-0"></div>
                         </div>
                         <div className="text-center h-[30px]">
-                            <p className="text-xl">{display_item.user_name}</p>
+                            <p className="text-xl">{member_items.user_name}</p>
                         </div>
                         <div className="mt-[15px]">
-                            <ScheduleList schedules={display_item.schedules} />
-                            <Study survey={display_item.surveys}/>
+                            <ScheduleList schedules={member_items.schedules} />
+                            <Study
+                                textList={setTextList(member_items)}
+                                selectedDepartmentId={member_items.selectedDepartmentId}
+                            />
                         </div>
                     </div>
                 </div>

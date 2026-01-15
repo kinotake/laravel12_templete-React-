@@ -1,5 +1,15 @@
 const ScheduleList = ({ schedules }) => {
 
+    console.log("schedulesの値のデバックです")
+    console.log(schedules)
+
+    const csrfToken =
+    typeof document !== 'undefined'
+        ? document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content')
+            : '';
+
     return (
         <div className="border-l-4 border-gray-300 ml-[10px] h-[413px]">
                         {schedules?.map((schedule, j) => {
@@ -57,8 +67,19 @@ const ScheduleList = ({ schedules }) => {
                                                 {schedule.detail}
                                             </p>
                                             <p className="text-sm text-gray-500 hidden group-hover:block">
-                                                ({startDay})-({endDay})
+                                                ({startDay}〜{endDay})
                                             </p>
+                                            <form
+                                            action={`/schedule/delete/${schedule.id}`}
+                                            method="POST">
+                                                <input type="hidden" name="_token"  value={csrfToken}/>
+                                                <button
+                                                    type="submit"
+                                                    className="text-red-500 ml-2 text-gray-400"
+                                                >
+                                                    削除
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

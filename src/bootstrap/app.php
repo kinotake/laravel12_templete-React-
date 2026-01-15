@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'aaa',
             'slack/interact',
+            '/department/interact',
             'api/*',       // API系をまとめて除外したい場合
         ]);
     })

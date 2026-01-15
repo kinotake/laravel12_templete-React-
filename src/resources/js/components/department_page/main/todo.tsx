@@ -6,6 +6,13 @@ const Todos = () => {
     const { props } = usePage();
     const display_todos = props.display_data?.display_todos || [];
 
+    const csrfToken =
+    typeof document !== 'undefined'
+        ? document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute('content')
+            : '';
+
     return (
         <div className="ml-10">
             {display_todos.map((group) => (
@@ -26,9 +33,12 @@ const Todos = () => {
                                             </a>
                                         </div>
                                         <div className="bg-[#ffffff] mt-[8px] ml-[7px] mr-[10px]">
-                                            <a href="">
-                                                <img src="/images/home/todo/done.png" className="w-7 h-7 hover:content-[url('/images/home/todo/done_hover.png')]" />
-                                            </a>
+                                            <form action={`/todo/done/${todo.id}`} method="POST">
+                                                <input type="hidden" name="_token"  value={csrfToken}/>
+                                                <button type="submit" className="text-red-500 ml-2 text-gray-400">
+                                                    <img src="/images/home/todo/done.png" className="w-7 h-7 hover:content-[url('/images/home/todo/done_hover.png')]" />
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                     <p className="whitespace-pre-line leading-[1.0] m-0 text-sm mr-5 ml-5 mt-2 overflow-y-scroll h-[150px]">

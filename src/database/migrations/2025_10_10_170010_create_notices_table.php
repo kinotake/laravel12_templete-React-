@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('department_id')->constrained('departments');
             $table->text('title')->nullable();
+            $table->string('slack_url')->nullable();
             $table->text('content');
             $table->timestamps();
         });

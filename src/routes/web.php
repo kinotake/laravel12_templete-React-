@@ -7,16 +7,22 @@ use App\Http\Controllers\TodoController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\SlackController;
 use App\Http\Controllers\PythonController;
+use App\Http\Controllers\StudyController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 Route::get('/', [UserController::class, 'index'])->name('home');
+Route::get('/department/select', [UserController::class, 'registerDepartmentIndex']);
+Route::post('/department/user/set', [UserController::class, 'registerDepartment']);
 Route::get('/departments/{department_id}', [DepartmentController::class, 'index']);
 Route::get('/user/todo', [TodoController::class, 'index']);
 Route::get('/schedules/{department_id}', [ScheduleController::class, 'index']);
 Route::post('/schedule/store', [ScheduleController::class, 'store']);
+Route::post('schedule/delete/{schedule_id}', [ScheduleController::class, 'delete']);
+Route::post('/study/store', [StudyController::class, 'store']);
+Route::post('/todo/done/{todo_id}', [TodoController::class, 'done']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,9 +49,14 @@ Route::post('/aaa', function (Request $request) {
 });
 
 Route::post('/slack/interact', [SlackController::class, 'interact']);
+Route::post('/department/interact', [SlackController::class, 'department']);
 
 Route::post('/api/rag/query', [PythonController::class, 'index']);
 Route::post('/api/department/rag/query', [PythonController::class, 'indexDepartment']);
 Route::post('/rag/edit/{department_id}', [PythonController::class, 'edit']);
 
 Route::get('/document/edit/{department_id}', [UserController::class, 'show']);
+
+Route::post('/energy_update', [UserController::class, 'energyUpdate'])
+    ->middleware('auth')
+    ->name('energy.update');

@@ -6,14 +6,11 @@ import { usePage } from '@inertiajs/react';
 
 const Home: React.FC = () => {
     const { display_data } = usePage().props;
-    const { departments } = display_data;
-    const { surveys } = display_data;
-    const { schedules } = display_data;
 
     return (
         <div>
             <div className="flex">
-                <Sidebar departments ={departments} surveys={surveys} schedules ={schedules}/>
+                <Sidebar display_data={display_data} />
                 <div>
                     <div
                         style={{ height: "110vh", padding: "1rem" }}

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use Inertia\Inertia;
 use App\Models\Department;
@@ -8,6 +9,7 @@ use App\Models\Survey;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use App\Http\Requests\ScheduleRequest;
+use Illuminate\Support\Facades\Log;
 
 class ScheduleController extends Controller
 {
@@ -43,7 +45,8 @@ class ScheduleController extends Controller
                 'department_id' => $department_id,
                 'user_name' => $user_name,
                 'schedules' => $member_schedules,
-                'surveys' => $member_surveys,
+                'surveys' =>  $member_surveys,
+                'selectedDepartmentId' => $department_id,
             ];
         }
 
@@ -60,12 +63,26 @@ class ScheduleController extends Controller
 
     public function store(ScheduleRequest $request)
     {
+        $user_id = Auth::id();
+        Log::info($request);
         Schedule::create([
             'detail' => $request->detail,
             'start'  => $request->start,
             'end'    => $request->end,
+            'department_id'  => $request->department_id,
+            'user_id'  => $user_id,
         ]);
 
-        return back();
+        return redirect('user/todo');
+    }
+
+    public function delete($schedule_id)
+    {
+        $user_id = Auth::id();
+        Schedule::where('user_id', $user_id)
+            ->where('id', $schedule_id)
+            ->delete();
+
+        return redirect('user/todo');
     }
 }

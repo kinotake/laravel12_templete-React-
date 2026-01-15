@@ -7,6 +7,8 @@ const Notice = () => {
     const display_data = props.display_data;
     const notices = display_data?.notices || [];
 
+    console.log(notices);
+
     return (
         <div className="ml-10">
             <h2 className="mt-4">{display_data?.department_name}お知らせ一覧</h2>
@@ -20,7 +22,9 @@ const Notice = () => {
                             <div className="flex">
                                 <p className=" w-72 ml-2">{notice.title}</p>
                                 <div className="bg-[#ffffff] hover:animate-bounce mt-2">
-                                    <img src="/images/logo_icon/slack.png" className="w-7 h-7 mx-auto" />
+                                    <a href={notice.slack_url} target="_blank">
+                                        <img src="/images/logo_icon/slack.png" className="w-7 h-7 mx-auto" />
+                                    </a>
                                 </div>
                             </div>
                             <p className="whitespace-pre-line leading-[1.0] m-0 text-sm mr-5 ml-5 mt-2 overflow-y-scroll h-[150px]">

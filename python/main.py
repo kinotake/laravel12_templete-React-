@@ -215,16 +215,30 @@ async def receive_department_message(request: Request):
 # GPTに質問 + コンテキストを渡して回答生成
     response = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "あなたは社内FAQ回答AIです。次の制約を必ず守ってください：\
-            1. 回答は、与えられた社内情報の範囲内でのみ行ってください。\
-            2. 社内情報に記載がない内容については、推測せずに「不明です」と答えてください。\
-            3. 回答は簡潔で正確に、日本語で書いてください。"},
-            {"role": "user", "content": f"以下の社内情報を参考に質問に答えてください。\n\n参考情報:\n{context}\n\n質問:{query}"}
+        messages = [
+            {
+                "role": "system",
+                "content": "あなたは社内FAQ回答AIです。次の制約を必ず守ってください：\
+                1. 回答は、与えられた社内情報（コンテキスト）の範囲内でのみ行ってください。\
+                2. コンテキストに存在しない内容や推測は絶対に答えないでください。\
+                3. コンテキストに該当情報が無い場合は、必ず「社内情報に該当の記載がありません」と返してください。\
+                4. 同義語の場合は返答して構いません。\
+                5. 回答は簡潔で正確に、日本語で書いてください。"
+            },
+            {
+                "role": "user",
+                "content": f"以下の社内情報のみを使って質問に答えてください。\
+                それ以外の知識や推測は使わないでください。\n\n\
+                社内情報:\n{context}\n\n\
+                質問:{query}"
+            }
         ]
     )
 
     answer = response.choices[0].message.content
+
+    if query == "失敗をしよう":
+        answer = "おめでとうございます!estraのvalueの一つを話しかけてくれましたね!実は、このサイトの中には2025年11月現在のestraのあと二つのvalueが隠されています。休憩程度によければ探してみてくれたらとっても嬉しいです。（自費が尽きたら機能としてこれは削除してしまうかもしれません。）"
 
     return {
         "reply": answer,

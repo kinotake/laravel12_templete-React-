@@ -8,19 +8,34 @@ use App\Models\Department;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Models\Todo;
+use App\Models\Notice;
 use Illuminate\Support\Facades\Auth;
 
 class SlackController extends Controller
 {
     public function interact(Request $request)
     {
-        // ここをスラックのユーザと紐付ける
-        $user_id = 1;
-        $user = User::find($user_id);
-
-        $departments = $user->departments;
 
         $payload = json_decode($request->input('payload'), true);
+
+        $slack_user_name = $payload['user']['name'];
+
+        $formatted_name = collect(explode('.', $slack_user_name))
+            ->map(function ($part, $index) {
+                return $index === 0
+                    ? ucfirst(strtolower($part)) // 名前
+                    : strtoupper($part);         // 名字イニシャル
+            })
+            ->implode('');
+
+        $user = User::whereRaw(
+            "REPLACE(name, ' ', '') LIKE ?",
+            ['%' . $formatted_name . '%']
+        )->first();
+
+        $user_id = $user->id;
+
+        $departments = $user->departments;
 
         if (isset($payload['type']) && $payload['type'] == 'message_action') {
 
@@ -57,7 +72,7 @@ class SlackController extends Controller
 
             $view = [
                 'type' => 'modal',
-                'callback_id' => 'select_example',
+                'callback_id' => 'select_todo',
                 'private_metadata' => json_encode([
                     'original_message' => $payload['message'] ?? null,
                     'user_id' => $payload['user']['id'] ?? null,
@@ -108,8 +123,144 @@ class SlackController extends Controller
 
             };
 
-            Log::info($department_id);
-            Todo::create([
+            Log::info("違うものが呼び出されています");
+
+            $callbackId = data_get($payload, 'view.callback_id');
+
+            if ($callbackId === 'select_todo') {
+                Todo::create([
+                    // ここをスラックのユーザと紐付ける
+                    'user_id' => $user_id,
+                    'department_id' => $department_id,
+                    'title' => null,
+                    'slack_url' => $meta['slack_url'],
+                    'content' => $meta['original_message']['text'],
+                ]);
+
+                Http::withToken(env('SLACK_BOT_TOKEN'))->post('https://slack.com/api/chat.postMessage', [
+                    'channel' => $payload['user']['id'], // DM でユーザー本人に送る
+                    'text' => "番号:『{$selected_department_name} 』のTodoリストに『{$meta['original_message']['text']}』が作成されました！{$meta['slack_url']}",
+                ]);
+            }
+
+            if ($callbackId === 'select_notice') {
+                Notice::create([
+                    // ここをスラックのユーザと紐付ける
+                    'user_id' => $user_id,
+                    'department_id' => $department_id,
+                    'title' => null,
+                    'slack_url' => $meta['slack_url'],
+                    'content' => $meta['original_message']['text'],
+                ]);
+
+                Http::withToken(env('SLACK_BOT_TOKEN'))->post('https://slack.com/api/chat.postMessage', [
+                    'channel' => $payload['user']['id'], // DM でユーザー本人に送る
+                    'text' => "番号:『{$selected_department_name} 』の部署ページに『{$meta['original_message']['text']}』が作成されました！{$meta['slack_url']}",
+                ]);
+            }
+
+            return response()->json(['response_action' => 'clear']);
+        }
+
+        return response()->json(['ok' => true]);
+    }
+
+    public function department(Request $request)
+    {
+        // ここをスラックのユーザと紐付ける
+        $user_id = 1;
+        $user = User::find($user_id);
+
+        $departments = $user->departments;
+
+        $payload = json_decode($request->input('payload'), true);
+
+        if (isset($payload['type']) && $payload['type'] == 'message_action') {
+
+            $trigger_id = $payload['trigger_id'];
+
+            $options = [];
+
+            $options = [[
+                'text' => [
+                    'type' => 'plain_text',
+                    'text' => '分類なし',
+                ],
+                'value' => 'none',
+            ]];
+
+            foreach ($departments as $department) {
+                $options[] = [
+                    'text' => [
+                        'type' => 'plain_text',
+                        'text' => $department->name,
+                    ],
+                    'value' => (string)$department->id,
+                ];
+            }
+
+            $teamDomain = data_get($payload, 'team.domain');
+            $channelId = data_get($payload, 'channel.id');
+            $messageTs = data_get($payload, 'message_ts');
+
+            // "." を削除して Slack URL 用に整形
+            $tsFormatted = str_replace('.', '', $messageTs);
+
+            $slackUrl = "https://{$teamDomain}.slack.com/archives/{$channelId}/p{$tsFormatted}";
+
+            $view = [
+                'type' => 'modal',
+                'callback_id' => 'select_notice',
+                'private_metadata' => json_encode([
+                    'original_message' => $payload['message'] ?? null,
+                    'user_id' => $payload['user']['id'] ?? null,
+                    'slack_url' => $slackUrl,
+                ]),
+                'title' => ['type' => 'plain_text', 'text' => '選択してください'],
+                'blocks' => [
+                    [
+                        'type' => 'input',
+                        'block_id' => 'select_block',
+                        'label' => ['type' => 'plain_text', 'text' => 'オプションを選択'],
+                        'element' => [
+                            'type' => 'static_select',
+                            'action_id' => 'option_select',
+                            'placeholder' => ['type' => 'plain_text', 'text' => '選んでください'],
+                            'options' => $options,
+                        ]
+                    ]
+                ],
+                'submit' => ['type' => 'plain_text', 'text' => '送信'],
+
+            ];
+
+            $response = Http::withToken(env('SLACK_BOT_TOKEN'))
+                ->post('https://slack.com/api/views.open', [
+                    'trigger_id' => $trigger_id,
+                    'view' => json_encode($view),
+                ]);
+
+            return response()->json(['ok' => true]);
+        }
+
+        if (isset($payload['type']) && $payload['type'] == 'view_submission') {
+
+            $selected = $payload['view']['state']['values']['select_block']['option_select']['selected_option']['value'] ?? null;
+            $meta = json_decode($payload['view']['private_metadata'] ?? '{}', true);
+
+            if ($selected == 'none') {
+
+                $department_id = null;
+                $selected_department_name = "未分類";
+            } else {
+
+                $selected_department = Department::find($selected);
+                $selected_department_name = $selected_department->name;
+                $department_id = $selected_department->id;
+            };
+
+            Log::info("noticeに届いてます");
+            Notice::create([
                 // ここをスラックのユーザと紐付ける
                 'user_id' => $user_id,
                 'department_id' => $department_id,
@@ -120,7 +271,7 @@ class SlackController extends Controller
 
             Http::withToken(env('SLACK_BOT_TOKEN'))->post('https://slack.com/api/chat.postMessage', [
                 'channel' => $payload['user']['id'], // DM でユーザー本人に送る
-                'text' => "番号:『{$selected_department_name} 』のTodoリストに『{$meta['original_message']['text']}』が作成されました！{$meta['slack_url']}",
+                'text' => "番号:『{$selected_department_name} 』の部署ページに『{$meta['original_message']['text']}』が作成されました！{$meta['slack_url']}",
             ]);
 
             return response()->json(['response_action' => 'clear']);

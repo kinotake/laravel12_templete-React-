@@ -10,7 +10,7 @@ const Home: React.FC = ({ display_data }) => {
     const department_id = display_data.department_id;
     console.log({ department_id });
 
-    let arr = ["「無成果無価値」をお探しですか？ ヒント:かっこつけないで愛に語れば見つけられるかもしれません。"];
+    let arr = ["「失敗をしよう」をお探しですか？ ヒント:かっこつけないで会いに話しかければ見つけられるかもしれません。"];
 
     console.log({ arr });
 

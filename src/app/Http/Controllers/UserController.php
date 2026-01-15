@@ -8,6 +8,9 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Chat;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Models\DepartmentUser;
 
 class UserController extends Controller
 {
@@ -59,4 +62,55 @@ class UserController extends Controller
             'department_id' => $department_id,
         ]);
     }
+
+    public function energyUpdate(Request $request)
+    {
+
+        $login_user_id = Auth::user()->id;
+        User::where('id', $login_user_id)->update([
+            'energy' => $request->input('new_energy_value'),
+        ]);
+
+        return back();
+    }
+
+    public function registerDepartmentIndex(Request $request)
+    {
+        $departments = Department::all();
+
+        return Inertia::render(
+            'departments_select',
+            [
+                'display_data' => [
+                    'departments' => $departments,
+                ],
+            ]
+        );
+
+    }
+
+    public function registerDepartment(Request $request)
+    {
+        $validated = $request->validate([
+            'department_ids' => ['required', 'array'],
+            'department_ids.*' => ['integer', 'exists:departments,id'],
+        ]);
+
+        $user = Auth::user();
+
+        // 既存の所属をいったん全削除（上書きしたい場合）
+        DepartmentUser::where('user_id', $user->id)->delete();
+
+        // department_ids を 1つずつ取り出して department_user にレコード作成（Eloquentのcreate）
+        foreach ($validated['department_ids'] as $departmentId) {
+            DepartmentUser::create([
+                'user_id' => $user->id,
+                'department_id' => $departmentId,
+            ]);
+        }
+
+        return redirect('/');
+
+    }
+
 }

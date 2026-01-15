@@ -19,6 +19,7 @@ class Todo extends Model
         'title',
         'slack_url',
         'content',
+        'done',
     ];
 
     public function user(): BelongsTo

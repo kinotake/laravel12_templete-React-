@@ -8,14 +8,17 @@ import { usePage } from "@inertiajs/react";
 const Schedule: React.FC = () => {
 
     const { props } = usePage();
-    const display_data = props.display_data?.members_items || [];
+    const members_items = props.display_data?.members_items || [];
+
+    console.log("データが")
+    console.log(members_items)
 
     return (
         <GoDepartments>
             <div className="flex">
                 <Sidebar />
                 <div>
-                    <UserNameContent display_data={display_data} />
+                    <UserNameContent members_items={members_items} />
                 </div>
             </div>
             <UserButton />

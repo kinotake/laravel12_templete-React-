@@ -7,7 +7,7 @@ use Inertia\Inertia;
 use App\Models\Todo;
 use App\Models\Survey;
 use App\Models\Schedule;
-
+use Illuminate\Support\Facades\Log;
 
 class TodoController extends Controller
 {
@@ -22,10 +22,7 @@ class TodoController extends Controller
 
         $todos = Todo::where('user_id', $user_id)
             ->where('department_id', null)
-            ->get();
-
-        $todos = Todo::where('user_id', $user_id)
-            ->where('department_id', null)
+            ->where('done', false)
             ->get();
 
         $user_all_todos[] = [
@@ -38,6 +35,7 @@ class TodoController extends Controller
             $department_name = $department->name;
             $department_todos = Todo::where('user_id', $user_id)
                 ->where('department_id', $department->id)
+                ->where('done', false)
                 ->get();
 
             $user_all_todos[] =[
@@ -60,6 +58,7 @@ class TodoController extends Controller
                 return [
                     'id' => $user->id,
                     'name' => $user->name,
+                    'energy' => $user->energy,
                     'img' => $user->img,
                     'tweet' => $user->tweet ? [
                         'id' => $user->tweet->id,
@@ -88,11 +87,18 @@ class TodoController extends Controller
 
         $user_all_schedules = [];
 
+        $start = now()->startOfMonth();
+        $end = now()->endOfMonth();
+
         foreach ($departments as $department) {
             $department_id = $department->id;
             $department_name = $department->name;
             $department_schedules = Schedule::where('user_id', $user_id)
                 ->where('department_id', $department->id)
+                ->where(function ($query) use ($start, $end) {
+                    $query->whereBetween('start', [$start, $end])   // 開始が今月内
+                        ->orWhereBetween('end', [$start, $end]);  // 終了が終了内
+                })
                 ->get();
 
             $user_all_schedules[] = [
@@ -108,12 +114,29 @@ class TodoController extends Controller
                 'display_data' => [
                     'display_todos' => $user_all_todos,
                     // ユーザ一人分の情報が入っています（消さないでください）
+                    'user' => $user,
                     'members' => $members,
                     'departments' => $departments,
-                    'surveys' => $user_all_surveys,
-                    'schedules' => $department_schedules,
+                    'user_all_surveys' => $user_all_surveys,
+                    'schedules' => $user_all_schedules,
                 ],
             ]
         );
+    }
+
+    public function done($todo_id)
+    {
+        $user_id = Auth::id();
+        $todo = Todo::where('user_id', $user_id)
+            ->where('id', $todo_id)
+            ->first();
+
+        if ($todo) {
+            $todo->done = true;
+            $todo->save();
+        }
+
+        return redirect()->back();
+
     }
 }
